@@ -1,0 +1,7 @@
+@for(task of tasks; track task){
+<div>
+  <h3>{{ task.title }}</h3>
+  <p>Priority: {{ task.priority }}</p>
+  <p>Status: {{ task.isCompleted ? "Completed" : "Pending" }}</p>
+</div>
+}
