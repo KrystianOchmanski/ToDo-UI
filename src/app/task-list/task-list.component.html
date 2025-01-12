@@ -1,7 +1,34 @@
-@for(task of tasks; track task){
-<div>
-  <h3>{{ task.title }}</h3>
-  <p>Priority: {{ task.priority }}</p>
-  <p>Status: {{ task.isCompleted ? "Completed" : "Pending" }}</p>
+<div class="row">
+  <div class="col">
+    <div class="card m-4 shadow-sm">
+      <div class="card-header d-flex justify-content-between">
+        <h4 class="card-title mb-0">Task List</h4>
+        <button class="btn btn-primary">Add task</button>
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          @for(task of tasks; track task){
+          <div class="list-group-item list-group-item-action d-flex">
+            <input
+              type="checkbox"
+              [checked]="task.isCompleted"
+              (change)="onTaskCompletedChange(task)"
+              id="isCompleted-{{ task.id }}"
+              name="isCompleted-{{ task.id }}"
+              class="me-2"
+            />
+            <div>
+              <h5 class="mb-1">{{ task.title }}</h5>
+              <span class="text-secondary">
+                {{ task.endDate | date : "HH:mm dd.MM.yyyy" }}
+              </span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col"></div>
 </div>
-}

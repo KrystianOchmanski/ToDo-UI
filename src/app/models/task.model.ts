@@ -1,7 +1,7 @@
 export interface Task {
   id: number;
   title: string;
-  priority: number;
+  isImportant: boolean;
   isCompleted: boolean;
   creationDate: string;
   endDate: string;
