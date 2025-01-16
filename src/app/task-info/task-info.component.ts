@@ -1,7 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Task } from '../models/task.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-task-info',
@@ -9,21 +18,31 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './task-info.component.html',
   styleUrl: './task-info.component.css',
 })
-export class TaskInfoComponent implements OnInit {
+export class TaskInfoComponent implements OnInit, OnChanges {
   @Input() task!: Task;
   @Output() closed: EventEmitter<Task> = new EventEmitter<Task>();
 
   taskForm!: FormGroup;
 
-  constructor() {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    // Form initialization
+    this.initForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['task']) {
+      // Form init when task changes
+      this.initForm();
+    }
+  }
+
+  private initForm() {
     this.taskForm = new FormGroup({
-      title: new FormControl(this.task.title, [Validators.required]),
-      endDate: new FormControl(this.task.endDate),
-      isImportant: new FormControl(this.task.isImportant),
-      isCompleted: new FormControl(this.task.isCompleted),
+      title: new FormControl(this.task?.title, [Validators.required]),
+      endDate: new FormControl(this.task?.endDate),
+      isImportant: new FormControl(this.task?.isImportant),
+      isCompleted: new FormControl(this.task?.isCompleted),
     });
   }
 
@@ -33,8 +52,11 @@ export class TaskInfoComponent implements OnInit {
 
   submit() {
     if (this.taskForm.valid) {
-      this.task = { ...this.task, ...this.taskForm.value };
-      this.closed.emit(this.task);
+      // Utwórz kopię zadania z wartości formularza
+      const updatedTask = { ...this.task, ...this.taskForm.value };
+
+      // Wywołaj metodę updateTask z TaskService
+      this.taskService.updateTask(updatedTask);
     }
   }
 }
